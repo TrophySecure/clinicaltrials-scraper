@@ -1,56 +1,104 @@
-[Clinicaltrials Scraper](https://apify.com/lulzasaur/clinicaltrials-scraper?fpr=data)
+[Clinicaltrials Scraper](https://apify.com/fortuitous_pirate/clinicaltrials-scraper?fpr=data)
 
-# ClinicalTrials.gov Scraper - Clinical Studies Data
+# ClinicalTrials.gov Scraper
 
-Search and extract clinical trial data from [ClinicalTrials.gov](https://clinicaltrials.gov), the world's largest registry of clinical studies with 500,000+ trials from 200+ countries.
+## Overview
+
+Scrape clinical trial data from ClinicalTrials. gov including NCT numbers, trial status, conditions, interventions, sponsors, enrollment, dates, locations, and eligibility criteria. Supports keyword search, filters (Recruitment Status).
 
 ## Features
 
-- **500,000+ studies**: Access the full ClinicalTrials.gov database
-- **Rich search**: Filter by condition, intervention, sponsor, location, status, phase, and study type
-- **Comprehensive data**: 30+ fields per study including eligibility, outcomes, locations, and sponsors
-- **Fast & reliable**: Uses the official ClinicalTrials.gov v2 API — no scraping needed
-- **Paginated**: Handles large result sets automatically with cursor-based pagination
-
-## Input Parameters
-
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `condition` | string | (empty) | Condition or disease (e.g., 'diabetes', 'breast cancer') |
-| `intervention` | string | (empty) | Intervention or treatment (e.g., 'aspirin', 'immunotherapy') |
-| `sponsor` | string | (empty) | Sponsor name (e.g., 'Pfizer', 'NIH') |
-| `location` | string | (empty) | Location (e.g., 'New York', 'United States') |
-| `status` | string | (empty) | Study status: RECRUITING, COMPLETED, etc. |
-| `studyType` | string | (empty) | Study type: INTERVENTIONAL, OBSERVATIONAL |
-| `phase` | string | (empty) | Study phase: PHASE1, PHASE2, PHASE3, PHASE4 |
-| `maxResults` | integer | 100 | Max results to return (0 = all) |
-
-## Output Example
-
-```
-{
-    "nctId": "NCT05123456",
-    "briefTitle": "A Study of Drug X in Patients With Type 2 Diabetes",
-    "overallStatus": "RECRUITING",
-    "phases": "PHASE3",
-    "studyType": "INTERVENTIONAL",
-    "conditions": "Type 2 Diabetes Mellitus",
-    "interventions": "Drug X, Placebo",
-    "sponsor": "Pharma Corp",
-    "enrollment": 500,
-    "startDate": "2024-01-15",
-    "completionDate": "2026-06-30",
-    "location": "Boston, Massachusetts, United States",
-    "locationCount": 42,
-    "url": "https://clinicaltrials.gov/study/NCT05123456"
-}
-```
+- Search by keywords to find specific results
+- Filter results by category or type
+- Export data in JSON, CSV, or Excel formats
+- Includes location and address data
+- Control output volume with configurable result limits
 
 ## Use Cases
 
-- **Pharma researchers**: Track competing clinical trials and pipeline drugs
-- **Healthcare providers**: Find recruiting trials for patients
-- **Investors**: Monitor pharmaceutical clinical trial progress and outcomes
-- **Academic researchers**: Analyze clinical trial trends, success rates, and study designs
-- **Patient advocacy groups**: Identify available trials for specific conditions
-- **Regulatory professionals**: Track clinical development across therapeutic areas
+- **Build** - Build healthcare provider directories
+- **Track** - Track medical facility data and ratings
+- **Aggregate** - Aggregate health data for research and analytics
+- **Monitor** - Monitor healthcare compliance and inspection results
+
+## Input Parameters
+
+| Parameter | Type | Description | Default |
+| --- | --- | --- | --- |
+| `searchQuery` | string | Search term for clinical trials (e.g., 'cancer', 'diabetes', 'covid-19') | `` |
+| `condition` | string | Filter by condition or disease being studied | `` |
+| `status` | array | Filter by recruitment status | `[]` |
+| `sponsor` | string | Filter by sponsor/organization name | `` |
+| `country` | string | Filter by study location country (e.g., 'United States') | `` |
+| `nctIds` | array | Fetch specific trials by NCT ID (e.g., NCT00001372) | `[]` |
+| `maxItems` | integer | Maximum number of trials to scrape | `100` |
+
+## Output Example
+
+Each result contains structured data like this:
+
+```
+{
+  "facilityName": "ClinicalTrials.gov Sample Item",
+  "address": "123 Main St",
+  "phone": "(555) 123-4567",
+  "type": "Standard",
+  "rating": 4.5,
+  "specialties": [
+    "Feature 1",
+    "Feature 2",
+    "Feature 3"
+  ],
+  "url": "https://example.com/item/12345"
+}
+```
+
+## Pricing
+
+This actor uses pay-per-result pricing:
+
+- **$0.001** per result
+- **$1.00** per 1,000 results
+
+No monthly fees. You only pay for what you scrape. [Apify Free plan](https://apify.com/pricing) includes $5/month in platform credits.
+
+## How to Run
+
+### Apify Console
+
+1. Go to the [ClinicalTrials.gov Scraper](https://apify.com/fortuitous_pirate/clinicaltrials-scraper) actor page
+2. Configure your input parameters
+3. Click **Start** and wait for the results
+4. Download data in JSON, CSV, or Excel format
+
+### API
+
+```
+curl -X POST "https://api.apify.com/v2/acts/fortuitous_pirate~clinicaltrials-scraper/runs?token=YOUR_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"maxItems": 10}'
+```
+
+### Python SDK
+
+```
+from apify_client import ApifyClient
+
+client = ApifyClient("YOUR_API_TOKEN")
+run = client.actor("fortuitous_pirate/clinicaltrials-scraper").call(
+    run_input={"maxItems": 10}
+)
+
+for item in client.dataset(run["defaultDatasetId"]).iterate_items():
+    print(item)
+```
+
+## Integration
+
+Connect ClinicalTrials.gov Scraper with your existing tools and workflows:
+
+- **API access** - Programmatic access via [Apify API](https://docs.apify.com/api/v2)
+- **Webhooks** - Get notified when scraping completes
+- **Scheduling** - Set up recurring runs on any schedule
+- **Zapier / Make** - Connect with 5,000+ apps via [Apify integrations](https://apify.com/integrations)
+- **Python / Node.js SDKs** - Native client libraries for easy integration
